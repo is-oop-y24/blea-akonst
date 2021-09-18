@@ -1,13 +1,10 @@
-using System;
-using Isu.Tools;
-
 namespace Isu
 {
     public class Student
     {
         // counter of ID must be static
         // because of the need to assign a new number to each student
-        private static int _countId;
+        private static int _countId = 0;
 
         public Student(Group group, string name)
         {

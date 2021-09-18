@@ -6,7 +6,7 @@ namespace Isu
 {
     public class Group
     {
-        public Group(string name, byte limit)
+        public Group(string name, byte capacity)
         {
             if (name.StartsWith("M3") && name.Length == 5)
             {
@@ -17,14 +17,13 @@ namespace Isu
                 throw new IsuException("Invalid group name!");
             }
 
-            StudentsLimit = limit;
+            Capacity = capacity;
             CourseNumber = new CourseNumber(Convert.ToByte(GroupName.Substring(2, 1)));
         }
 
         public List<Student> ListStudents { get; } = new List<Student>();
         public string GroupName { get; }
         public CourseNumber CourseNumber { get; }
-        public byte StudentsLimit { get; }
-        public byte StudentsCount { get; set; }
+        public byte Capacity { get; }
     }
 }

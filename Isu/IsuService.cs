@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Isu.Services;
 using Isu.Tools;
@@ -13,6 +11,11 @@ namespace Isu
 
         public Group AddGroup(string name, byte limit)
         {
+            if (_isuGroups.Exists(group => group.GroupName.Equals(name)))
+            {
+                throw new IsuException("Group with this name is already exists!");
+            }
+
             var group = new Group(name, limit);
             _isuGroups.Add(group);
             return group;
@@ -23,10 +26,9 @@ namespace Isu
             var student = new Student(group, name);
             foreach (Group g in _isuGroups.Where(g => g.GroupName.Equals(@group.GroupName)))
             {
-                if (g.StudentsCount < g.StudentsLimit)
+                if (g.ListStudents.Count < g.Capacity)
                 {
                     g.ListStudents.Add(student);
-                    ++g.StudentsCount;
                     return student;
                 }
                 else
@@ -40,9 +42,15 @@ namespace Isu
 
         public Student GetStudent(int id)
         {
-            foreach (Student student in from @group in _isuGroups from student in @group.ListStudents where student.Id.Equals(id) select student)
+            foreach (Group g in _isuGroups)
             {
-                return student;
+                foreach (Student student in g.ListStudents)
+                {
+                    if (student.Id.Equals(id))
+                    {
+                        return student;
+                    }
+                }
             }
 
             throw new IsuException("Student with this ISU number not found!");
@@ -87,14 +95,14 @@ namespace Isu
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            if (student.CourseNumber.Equals(newGroup.CourseNumber))
+            if (!student.CourseNumber.Equals(newGroup.CourseNumber) || student.GroupName.Equals(newGroup.GroupName))
             {
-                FindGroup(student.GroupName).ListStudents.Remove(student);
-                FindGroup(newGroup.GroupName).ListStudents.Add(student);
+                throw new IsuException("You can only change a group a student within one course!");
             }
             else
             {
-                throw new IsuException("You can only change a group a student within one course!");
+                FindGroup(student.GroupName).ListStudents.Remove(student);
+                FindGroup(newGroup.GroupName).ListStudents.Add(student);
             }
         }
     }
