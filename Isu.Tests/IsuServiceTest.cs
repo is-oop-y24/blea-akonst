@@ -18,9 +18,10 @@ namespace Isu.Tests
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
             Group group = _isuService.AddGroup("M3109", 20);
-            Student student = _isuService.AddStudent(group, "Vasiliy");
-            Assert.Contains(student, group.ListStudents);
-            Assert.AreEqual(group.GroupName, student.GroupName);
+            _isuService.AddStudent(group, "Vasya");
+            Student student = _isuService.FindStudent("Vasya");
+            Assert.AreEqual(group.GroupName, student.GroupName);                                // student has group
+            Assert.AreEqual(student, _isuService.FindGroup("M3109").GetStudentByName("Vasya")); // group in ISU has student Vasya
         }
 
         [Test]

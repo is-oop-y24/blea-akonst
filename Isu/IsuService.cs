@@ -24,33 +24,22 @@ namespace Isu
         public Student AddStudent(Group group, string name)
         {
             var student = new Student(group, name);
-            foreach (Group g in _isuGroups.Where(g => g.GroupName.Equals(@group.GroupName)))
-            {
-                if (g.ListStudents.Count < g.Capacity)
-                {
-                    g.ListStudents.Add(student);
-                    return student;
-                }
-                else
-                {
-                    throw new IsuException("Count of students cannot be more than group capacity!");
-                }
-            }
+            Group searchResultGroup = FindGroup(group.GroupName);
 
-            throw new IsuException("Group with this name not found!");
+            if (searchResultGroup.Equals(new Group()))
+                throw new IsuException("Group with this name not found!");
+
+            searchResultGroup.AddStudentToGroup(student);
+            return student;
         }
 
         public Student GetStudent(int id)
         {
             foreach (Group g in _isuGroups)
             {
-                foreach (Student student in g.ListStudents)
-                {
-                    if (student.Id.Equals(id))
-                    {
-                        return student;
-                    }
-                }
+                Student searchResultStudent = g.GetStudentById(id);
+                if (searchResultStudent != null && !searchResultStudent.Equals(new Student()))
+                    return searchResultStudent;
             }
 
             throw new IsuException("Student with this ISU number not found!");
@@ -58,9 +47,11 @@ namespace Isu
 
         public Student FindStudent(string name)
         {
-            foreach (Student student in from @group in _isuGroups from student in @group.ListStudents where student.Name.Equals(name) select student)
+            foreach (Group g in _isuGroups)
             {
-                return student;
+                Student searchResultStudent = g.GetStudentByName(name);
+                if (searchResultStudent != null && !searchResultStudent.Equals(new Student()))
+                    return searchResultStudent;
             }
 
             throw new IsuException("Student with this name not found!");
@@ -68,21 +59,42 @@ namespace Isu
 
         public List<Student> FindStudents(string groupName)
         {
-            var searchResultList = _isuGroups.Where(@group => @group.GroupName.Equals(groupName)).SelectMany(@group => @group.ListStudents).ToList();
-            return searchResultList;
+            Group searchResult = _isuGroups.Find(gr => gr.GroupName.Equals(groupName));
+            if (searchResult != null && !searchResult.Equals(new Group()))
+            {
+                return searchResult.ReturnStudentList();
+            }
+
+            throw new IsuException("Group was not found!");
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            var searchResultList = _isuGroups.Where(@group => @group.CourseNumber.Equals(courseNumber)).SelectMany(@group => @group.ListStudents).ToList();
-            return searchResultList;
+            var searchResultList = new List<Student>();
+            foreach (Group g in _isuGroups)
+            {
+                if (g.CourseNumber.Equals(courseNumber))
+                {
+                    searchResultList.AddRange(g.ReturnStudentList());
+                }
+            }
+
+            if (!searchResultList.Count.Equals(0))
+            {
+                return searchResultList;
+            }
+            else
+            {
+                throw new IsuException("Groups with this course number was not found!");
+            }
         }
 
         public Group FindGroup(string groupName)
         {
-            foreach (Group @group in _isuGroups.Where(@group => @group.GroupName.Equals(groupName)))
+            Group searchResultGroup = _isuGroups.Find(gr => gr.GroupName.Equals(groupName));
+            if (searchResultGroup != null && !searchResultGroup.Equals(new Group()))
             {
-                return @group;
+                return searchResultGroup;
             }
 
             throw new IsuException("Group with this name not found!");
@@ -99,11 +111,9 @@ namespace Isu
             {
                 throw new IsuException("You can only change a group a student within one course!");
             }
-            else
-            {
-                FindGroup(student.GroupName).ListStudents.Remove(student);
-                FindGroup(newGroup.GroupName).ListStudents.Add(student);
-            }
+
+            FindGroup(student.GroupName).RemoveStudentFromGroup(student);
+            FindGroup(newGroup.GroupName).AddStudentToGroup(student);
         }
     }
 }
