@@ -18,79 +18,74 @@ namespace Shops.Tests
         [Test]
         public void DeliveryOfGoodsToTheStore()
         {
-            // creating the person with 30000 bucks
             uint startBalance = 30000;
             var person = new Person(startBalance);
             
-            // creating the shop
             Shop shop = _shopsService.AddShop("Amazon");
-
-            // adding something to shop
-            uint packageCount = 5;
-            Good iphone = _shopsService.AddGoodsToShop(shop.Id, "Apple iPhone 13", packageCount, 999);
-            Good samsung = _shopsService.AddGoodsToShop(shop.Id, "Samsung Galaxy S228", packageCount, 666);
             
-            // buying something
+            uint packageCount = 5;
+            var iphone = new Good("iPhone", packageCount, 999);
+            var samsung = new Good("Samsung", packageCount, 666);
+            _shopsService.AddGoodsToShop(iphone, shop.Id);
+            _shopsService.AddGoodsToShop(samsung, shop.Id);
+            
             uint requiredIphones = 3;
             uint requiredSamsungs = 2;
-            _shopsService.BuyGoodsInShop(shop.Id, "Apple iPhone 13", requiredIphones, person);
-            _shopsService.BuyGoodsInShop(shop.Id, "Samsung Galaxy S228", requiredSamsungs, person);
+            _shopsService.BuyGoodsInShop(shop.Id, "iPhone", requiredIphones, person);
+            _shopsService.BuyGoodsInShop(shop.Id, "Samsung", requiredSamsungs, person);
 
             // money has been sent to the shop and count of goods has been changed
             Assert.AreEqual(startBalance - iphone.Price * requiredIphones - samsung.Price * requiredSamsungs, person.Balance);
-            Assert.AreEqual(packageCount - requiredIphones, iphone.Count);
-            Assert.AreEqual(packageCount - requiredSamsungs, samsung.Count);
+            Assert.AreEqual(packageCount - requiredIphones, shop.GetGoodCount("iPhone"));
+            Assert.AreEqual(packageCount - requiredSamsungs, shop.GetGoodCount("Samsung"));
         }
 
         [Test]
         public void ChangingPriceOfGoods()
         {
-            // creating the shop
             Shop shop = _shopsService.AddShop("Ozon");
             
-            // adding something to shop
-            uint startPrice = 2;
-            string goodName = "Milk";
-            Good milk = _shopsService.AddGoodsToShop(shop.Id, goodName, 1, startPrice);
+            var milk = new Good("Milk", 1, 2);
+            _shopsService.AddGoodsToShop(milk, shop.Id);
             
-            // changing price of good
-            uint newPrice = 100500; // inflation in Russian 90's
-            _shopsService.SetGoodPrice(shop.Id, goodName, newPrice);
+            uint newPrice = 100500; 
+            _shopsService.SetGoodPrice(shop.Id, milk.Name, newPrice);
             
             // check that new price is valid
-            Assert.AreEqual(newPrice, milk.Price);
+            Assert.AreEqual(newPrice, shop.GetGoodPrice("Milk"));
         }
 
         [Test]
         public void FindShopWithCheapestGood()
         {
-            // creating shops and person
             var person = new Person(45000);
             Shop shop1 = _shopsService.AddShop("Pyaterochka");
             Shop shop2 = _shopsService.AddShop("Magnit");
             Shop shop3 = _shopsService.AddShop("Dixy");
-
-            // adding same good with different prices to shops
+            
             string goodName = "Snickers";
-            uint cheapestPrice = 1;
-            _shopsService.AddGoodsToShop(shop1.Id, goodName, 100, 2);
-            _shopsService.AddGoodsToShop(shop2.Id, goodName, 100, cheapestPrice);
-            _shopsService.AddGoodsToShop(shop3.Id, goodName, 100, 16);
+            uint cheapestPrice = 10;
+            var snickers = new Good(goodName, 100, 150);
+            _shopsService.AddGoodsToShop(snickers, shop1.Id);
+            _shopsService.AddGoodsToShop(snickers, shop2.Id);
+            _shopsService.AddGoodsToShop(snickers, shop3.Id);
+            _shopsService.SetGoodPrice(shop2.Id, goodName, cheapestPrice);
+            _shopsService.SetGoodPrice(shop3.Id, goodName, 30);
+            
             
             // trying to find
-            Good resultGood = _shopsService.BuyTheCheapestGoods(goodName, 70, person);
-            Assert.AreEqual(resultGood.Price, cheapestPrice);
+            Shop cheapestShop = _shopsService.BuyTheCheapestGoods("Snickers", 50, person);
+            Assert.AreEqual(cheapestShop.GetGoodPrice(goodName), cheapestPrice);
         }
 
         [Test]
         public void PurchaseOfGoodsInLargerQuantitiesThanInStock_ThrowException()
         {
-            // creating a shop and a person
             Shop shop1 = _shopsService.AddShop("Pyaterochka");
             var person = new Person(40000);
             
-            // adding goods
-            _shopsService.AddGoodsToShop(shop1.Id, "Water 5l", 5, 100);
+            var good = new Good("Water", 5, 100); 
+            _shopsService.AddGoodsToShop(good, shop1.Id);
             
             Assert.Catch<ShopsException>(() =>
             {

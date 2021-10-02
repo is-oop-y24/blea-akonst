@@ -2,11 +2,11 @@ namespace Shops
 {
     public class Good
     {
-        public Good(string goodName, uint goodCount, uint goodPrice)
+        public Good(string name, uint count, uint price)
         {
-            Name = goodName;
-            Count = goodCount;
-            Price = goodPrice;
+            Name = name;
+            Count = count;
+            Price = price;
         }
 
         public string Name { get; }

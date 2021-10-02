@@ -2,10 +2,10 @@ namespace Shops.Services
 {
     public interface IShopsService
     {
-        public Shop AddShop(string shopName);
-        public Good AddGoodsToShop(uint shopId, string goodName, uint goodCount, uint goodPrice);
-        public Good BuyGoodsInShop(uint shopId, string goodName, uint goodCount, Person person);
-        public Good BuyTheCheapestGoods(string goodName, uint goodCount, Person person);
-        public void SetGoodPrice(uint shopId, string goodName, uint goodPrice);
+        Shop AddShop(string shopName);
+        void AddGoodsToShop(Good good, uint shopId);
+        Good BuyGoodsInShop(uint shopId, string goodName, uint goodCount, Person person);
+        Shop BuyTheCheapestGoods(string goodName, uint goodCount, Person person);
+        void SetGoodPrice(uint shopId, string goodName, uint goodPrice);
     }
 }
