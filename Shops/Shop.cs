@@ -50,20 +50,20 @@ namespace Shops
             return good.Count;
         }
 
-        public Good AddGood(string name, uint price, uint count)
+        public Good AddGood(Good suppliedGood)
         {
-            Good good = _goods.FirstOrDefault(g => g.Name.Equals(name));
+            Good good = _goods.FirstOrDefault(g => g.Name.Equals(suppliedGood.Name));
             if (good != default(Good))
             {
-                good.Count += count;
-                good.Price = price;
+                good.Count += suppliedGood.Count;
+                good.Price = suppliedGood.Price;
             }
             else
             {
-                _goods.Add(new Good(name, count, price));
+                _goods.Add(suppliedGood);
             }
 
-            return _goods.First(g => g.Name.Equals(name));
+            return _goods.First(g => g.Name.Equals(suppliedGood.Name));
         }
 
         public Good TakeGood(string name, uint count)

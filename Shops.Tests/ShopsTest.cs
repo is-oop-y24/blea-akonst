@@ -64,17 +64,18 @@ namespace Shops.Tests
             Shop shop3 = _shopsService.AddShop("Dixy");
             
             string goodName = "Snickers";
-            uint cheapestPrice = 10;
-            var snickers = new Good(goodName, 100, 150);
-            _shopsService.AddGoodsToShop(snickers, shop1.Id);
-            _shopsService.AddGoodsToShop(snickers, shop2.Id);
-            _shopsService.AddGoodsToShop(snickers, shop3.Id);
-            _shopsService.SetGoodPrice(shop2.Id, goodName, cheapestPrice);
-            _shopsService.SetGoodPrice(shop3.Id, goodName, 30);
+            uint cheapestPrice = 16;
             
+            var cheapGood = new Good(goodName, 100, cheapestPrice);
+            var mediumPriceGood = new Good(goodName, 100, 32);
+            var expensiveGood = new Good(goodName, 100, 128);
+            
+            _shopsService.AddGoodsToShop(mediumPriceGood, shop1.Id);
+            _shopsService.AddGoodsToShop(cheapGood, shop2.Id);
+            _shopsService.AddGoodsToShop(expensiveGood, shop3.Id);
             
             // trying to find
-            Shop cheapestShop = _shopsService.BuyTheCheapestGoods("Snickers", 50, person);
+            Shop cheapestShop = _shopsService.BuyTheCheapestGoods(goodName, 50, person);
             Assert.AreEqual(cheapestShop.GetGoodPrice(goodName), cheapestPrice);
         }
 

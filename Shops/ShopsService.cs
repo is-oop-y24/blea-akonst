@@ -25,7 +25,7 @@ namespace Shops
                 throw new ShopsException("This shop doesn't exists!");
             }
 
-            shop.AddGood(good.Name, good.Price, good.Count);
+            shop.AddGood(good);
         }
 
         public Good BuyGoodsInShop(uint shopId, string goodName, uint goodCount, Person person)
