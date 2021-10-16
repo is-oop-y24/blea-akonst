@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Isu;
@@ -8,16 +7,11 @@ namespace IsuExtra
 {
     public class Flow
     {
-        private byte _capacity;
-        private Schedule _flowSchedule;
         private List<Student> _flowStudents = new List<Student>();
+        private int _capacity;
+        private Schedule _flowSchedule;
 
-        public bool IsFlowSuitable(Schedule schedule)
-        {
-            
-        }
-
-        public Flow(Schedule flowSchedule, string name, byte capacity)
+        public Flow(Schedule flowSchedule, string name, int capacity)
         {
             FlowName = name;
             if (flowSchedule.CoupleCount() != 3)
@@ -27,6 +21,13 @@ namespace IsuExtra
 
             _flowSchedule = flowSchedule;
             _capacity = capacity;
+        }
+
+        public string FlowName { get; }
+
+        public bool IsFlowSuitable(Schedule schedule)
+        {
+            return _flowSchedule.IsSuitableSchedules(schedule);
         }
 
         public Student AddStudentToFlow(Student student)
@@ -45,7 +46,5 @@ namespace IsuExtra
 
             return _flowStudents.FirstOrDefault();
         }
-
-        public string FlowName { get; }
     }
 }

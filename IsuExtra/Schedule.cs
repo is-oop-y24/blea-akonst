@@ -30,15 +30,17 @@ namespace IsuExtra
         {
             foreach (Couple cp in schedule._schedule)
             {
-                Couple patternCouple = _schedule.FirstOrDefault(couple => couple.StartDay.Equals(cp.StartDay)
-                                                                          || couple.StartCoupleNumber.Equals(
-                                                                              cp.StartCoupleNumber));
+                Couple patternCouple = _schedule.FirstOrDefault(couple =>
+                                                                couple.StartDay.Equals(cp.StartDay) &&
+                                                                couple.StartCoupleNumber.Equals(cp.StartCoupleNumber));
 
-                if (patternCouple == default)
+                if (patternCouple != default)
                 {
                     return false;
                 }
             }
+
+            return true;
         }
 
         public int CoupleCount()
