@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO.Enumeration;
+using System.Text.RegularExpressions;
 using Isu.Tools;
 
 namespace Isu
@@ -9,10 +9,13 @@ namespace Isu
     {
         private int _capacity;
         private List<Student> _listStudents = new List<Student>();
+
+        // regex that describes the group name in format "letter_3_(1-4)_(00-99)"
+        private Regex _validGroupName = new Regex(@"^\w3\d{1,4}\d\d$");
         public Group() { }
         public Group(string name, byte capacity)
         {
-            if (name.StartsWith("M3") && name.Length == 5)
+            if (_validGroupName.IsMatch(name))
             {
                 GroupName = name;
             }
