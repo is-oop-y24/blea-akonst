@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Isu;
+using Isu.Tools;
 
 namespace IsuExtra
 {
@@ -8,8 +9,14 @@ namespace IsuExtra
     {
         private List<Couple> _schedule = new List<Couple>();
 
-        public void AddCouple(Group group, Couple couple)
+        public void AddCouple(Couple couple)
         {
+            if (_schedule.Exists(cp => cp.StartCoupleNumber.Equals(couple.StartCoupleNumber)
+                                                && cp.StartDay.Equals(couple.StartDay)))
+            {
+                throw new IsuException("This time is busy!");
+            }
+
             _schedule.Add(couple);
         }
 

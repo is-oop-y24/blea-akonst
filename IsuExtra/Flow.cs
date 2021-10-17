@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Isu;
 using Isu.Tools;
@@ -10,15 +11,9 @@ namespace IsuExtra
         private List<Student> _flowStudents = new List<Student>();
         private int _capacity;
         private Schedule _flowSchedule;
-
         public Flow(Schedule flowSchedule, string name, int capacity)
         {
             FlowName = name;
-            if (flowSchedule.CoupleCount() != 3)
-            {
-                throw new IsuException("Count of couples must be 3! (1 lecture, 2 practices)");
-            }
-
             _flowSchedule = flowSchedule;
             _capacity = capacity;
         }
@@ -27,24 +22,33 @@ namespace IsuExtra
 
         public bool IsFlowSuitable(Schedule schedule)
         {
-            return _flowSchedule.IsSuitableSchedules(schedule);
+            return _flowSchedule.IsSuitableSchedules(schedule) && _capacity > _flowStudents.Count;
         }
 
         public Student AddStudentToFlow(Student student)
         {
             _flowStudents.Add(student);
+
+            return _flowStudents.Find(st => st == student);
+        }
+
+        public Student RemoveStudentFromFlow(Student student)
+        {
+            _flowStudents.Remove(student);
+
+            return _flowStudents.Find(st => st == student);
         }
 
         public Student GetStudentByName(string name)
         {
             Student student = _flowStudents.FirstOrDefault(st => st.Name.Equals(name));
 
-            if (student == default(Student))
-            {
-                throw new IsuException("This student doesn't exists!");
-            }
+            return student;
+        }
 
-            return _flowStudents.FirstOrDefault();
+        public ReadOnlyCollection<Student> GetStudents()
+        {
+            return _flowStudents.AsReadOnly();
         }
     }
 }
