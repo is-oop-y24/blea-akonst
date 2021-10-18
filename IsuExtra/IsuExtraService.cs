@@ -11,7 +11,8 @@ namespace IsuExtra
     {
         private List<Course> _courses = new List<Course>();
         private Dictionary<Group, Schedule> _schedules = new Dictionary<Group, Schedule>();
-        private List<Student> _enrollment = new List<Student>();
+        private Dictionary<Student, int> _enrollmentCount = new Dictionary<Student, int>();
+        private Dictionary<string, char> _facultyNameToLetterCollection = new Dictionary<string, char>();
 
         public Course AddCourse(string courseName, string facultyName)
         {
@@ -20,7 +21,12 @@ namespace IsuExtra
                 throw new IsuException("This course is exists!");
             }
 
-            var course = new Course(courseName, facultyName);
+            if (!_facultyNameToLetterCollection.ContainsKey(facultyName))
+            {
+                throw new IsuException("Incorrect faculty!");
+            }
+
+            var course = new Course(courseName, _facultyNameToLetterCollection[facultyName]);
             _courses.Add(course);
 
             return course;
@@ -35,12 +41,19 @@ namespace IsuExtra
                 throw new IsuException("This course doesn't exists!");
             }
 
-            if (_enrollment.Contains(student))
+            if (_enrollmentCount.ContainsKey(student))
             {
-                throw new IsuException("Student is already enrolled to course!");
-            }
+                if (_enrollmentCount[student] == 2)
+                {
+                    throw new IsuException("Student is already enrolled to 2 courses!");
+                }
 
-            _enrollment.Add(student);
+                ++_enrollmentCount[student];
+            }
+            else
+            {
+                _enrollmentCount.Add(student, 1);
+            }
 
             return course.AddStudent(student, GetGroupSchedule(group));
         }
@@ -54,7 +67,14 @@ namespace IsuExtra
                 throw new IsuException("This course doesn't exists!");
             }
 
-            _enrollment.Remove(student);
+            if (_enrollmentCount[student] == 2)
+            {
+                --_enrollmentCount[student];
+            }
+            else
+            {
+                _enrollmentCount.Remove(student);
+            }
 
             course.RemoveStudent(student);
         }
@@ -113,7 +133,7 @@ namespace IsuExtra
 
             foreach (Student st in groupList)
             {
-                if (!_enrollment.Contains(st))
+                if (!_enrollmentCount.ContainsKey(st))
                 {
                     studentsWithoutCourse.Add(st);
                 }
@@ -129,6 +149,11 @@ namespace IsuExtra
             {
                 throw new IsuException("Schedule of this group doesn't exists!");
             }
+        }
+
+        public void AddFacultyLetterPair(string facultyName, char facultyLetter)
+        {
+            _facultyNameToLetterCollection.Add(facultyName, facultyLetter);
         }
     }
 }

@@ -15,6 +15,10 @@ namespace IsuExtra.Tests
         public void Setup()
         {
             _service = new IsuExtraService();
+            
+            _service.AddFacultyLetterPair("БТиНС", 'B');
+            _service.AddFacultyLetterPair("ИТиП", 'M');
+            _service.AddFacultyLetterPair("СУиР", 'R');
         }
 
         [Test]
@@ -92,10 +96,11 @@ namespace IsuExtra.Tests
         }
         
         [Test]
-        public void StudentTriesToEnrollIntoMoreThanOneCourse_ThrowException()
+        public void StudentTriesToEnrollIntoMoreThanTwoCourses_ThrowException()
         {
             Course course = _service.AddCourse("Биотехнологии", "БТиНС");
             Course course2 = _service.AddCourse("Компьютерные технологии", "ИТиП");
+            Course course3 = _service.AddCourse("Киберфиз", "СУиР");
 
             var groupSchedule = new Schedule();
             var courseSchedule = new Schedule();
@@ -129,6 +134,14 @@ namespace IsuExtra.Tests
             courseSchedule.AddAcademicClass(thirdCourseAcademicClass);
             
             course2.AddFlow("1.1", courseSchedule, 20);
+
+            courseSchedule = new Schedule();
+            
+            courseSchedule.AddAcademicClass(firstCourseAcademicClass);
+            courseSchedule.AddAcademicClass(secondCourseAcademicClass);
+            courseSchedule.AddAcademicClass(thirdCourseAcademicClass);
+            
+            course3.AddFlow("1.1", courseSchedule, 20);
             
             var group = new Group("P3110", 20);
             var student = new Student(group, "Vasiliy");
@@ -138,8 +151,9 @@ namespace IsuExtra.Tests
             _service.AddGroupSchedule(group, groupSchedule);
 
             _service.AddStudentToCourse(student, group, "Биотехнологии");
+            _service.AddStudentToCourse(student, group, "Компьютерные технологии");
 
-            Assert.Catch<IsuException>(() => _service.AddStudentToCourse(student, group, "Компьютерные технологии"));
+            Assert.Catch<IsuException>(() => _service.AddStudentToCourse(student, group, "Киберфиз"));
         }
         
         [Test]

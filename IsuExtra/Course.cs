@@ -11,21 +11,11 @@ namespace IsuExtra
         private List<Flow> _flowsList = new List<Flow>();
         private char _facultyLetter;
 
-        public Course(string course, string faculty)
+        public Course(string course, char facultyLetter)
         {
             CourseName = course;
 
-            _facultyLetter = faculty switch
-            {
-                "ИТиП" => 'M',
-                "ИКТ" => 'K',
-                "ФФ" => 'V',
-                "ФТМИ" => 'U',
-                "БИТ" => 'N',
-                "СУиР" => 'R',
-                "БТиНС" => 'B',
-                _ => throw new IsuException("Enter correct faculty name, please!")
-            };
+            _facultyLetter = facultyLetter;
         }
 
         public string CourseName { get; }
