@@ -7,41 +7,41 @@ namespace IsuExtra
 {
     public class Schedule
     {
-        private List<Couple> _schedule = new List<Couple>();
+        private List<AcademicClass> _schedule = new List<AcademicClass>();
 
-        public void AddCouple(Couple couple)
+        public void AddAcademicClass(AcademicClass academicClass)
         {
-            if (_schedule.Exists(cp => cp.StartCoupleNumber.Equals(couple.StartCoupleNumber)
-                                                && cp.StartDay.Equals(couple.StartDay)))
+            if (_schedule.Exists(cp => cp.StartAcademicClassNumber.Equals(academicClass.StartAcademicClassNumber)
+                                                && cp.StartDay.Equals(academicClass.StartDay)))
             {
                 throw new IsuException("This time is busy!");
             }
 
-            _schedule.Add(couple);
+            _schedule.Add(academicClass);
         }
 
-        public bool RemoveCouple(Couple couple)
+        public bool RemoveAcademicClass(AcademicClass academicClass)
         {
-            return _schedule.Remove(couple);
+            return _schedule.Remove(academicClass);
         }
 
-        public bool IsTimeBusy(Couple couple)
+        public bool IsTimeBusy(AcademicClass academicClass)
         {
-            Couple result = _schedule.FirstOrDefault(c => c.StartDay.Equals(couple.StartDay)
-                                                          && c.StartCoupleNumber.Equals(couple.StartCoupleNumber));
+            AcademicClass result = _schedule.FirstOrDefault(c => c.StartDay.Equals(academicClass.StartDay)
+                                                          && c.StartAcademicClassNumber.Equals(academicClass.StartAcademicClassNumber));
 
-            return result != default(Couple);
+            return result != default(AcademicClass);
         }
 
         public bool IsSuitableSchedules(Schedule schedule)
         {
-            foreach (Couple cp in schedule._schedule)
+            foreach (AcademicClass cp in schedule._schedule)
             {
-                Couple patternCouple = _schedule.FirstOrDefault(couple =>
-                                                                couple.StartDay.Equals(cp.StartDay) &&
-                                                                couple.StartCoupleNumber.Equals(cp.StartCoupleNumber));
+                AcademicClass patternAcademicClass = _schedule.FirstOrDefault(academicClass =>
+                                                                academicClass.StartDay.Equals(cp.StartDay) &&
+                                                                academicClass.StartAcademicClassNumber.Equals(cp.StartAcademicClassNumber));
 
-                if (patternCouple != default)
+                if (patternAcademicClass != default)
                 {
                     return false;
                 }
@@ -50,7 +50,7 @@ namespace IsuExtra
             return true;
         }
 
-        public int CoupleCount()
+        public int AcademicClassCount()
         {
             return _schedule.Count;
         }

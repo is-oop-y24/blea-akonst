@@ -25,21 +25,21 @@ namespace IsuExtra.Tests
             var groupSchedule = new Schedule();
             var courseSchedule = new Schedule();
             
-            var firstCourseCouple = new Couple(CoupleNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
-            var secondCourseCouple = new Couple(CoupleNumber.Second, DayOfWeek.Tuesday, "Vinny", 1223);
-            var thirdCourseCouple = new Couple(CoupleNumber.Third, DayOfWeek.Friday, "Kashin", 1224);
+            var firstCourseAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
+            var secondCourseAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Tuesday, "Vinny", 1223);
+            var thirdCourseAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Friday, "Kashin", 1224);
 
-            var firstCouple = new Couple(CoupleNumber.First, DayOfWeek.Monday, "Molochny", 1222);
-            var secondCouple = new Couple(CoupleNumber.Second, DayOfWeek.Monday, "Shokoladny", 1223);
-            var thirdCouple = new Couple(CoupleNumber.Third, DayOfWeek.Monday, "Smirnov", 1224);
+            var firstAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Monday, "Molochny", 1222);
+            var secondAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Monday, "Shokoladny", 1223);
+            var thirdAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Monday, "Smirnov", 1224);
             
-            groupSchedule.AddCouple(firstCouple);
-            groupSchedule.AddCouple(secondCouple);
-            groupSchedule.AddCouple(thirdCouple);
+            groupSchedule.AddAcademicClass(firstAcademicClass);
+            groupSchedule.AddAcademicClass(secondAcademicClass);
+            groupSchedule.AddAcademicClass(thirdAcademicClass);
             
-            courseSchedule.AddCouple(firstCourseCouple);
-            courseSchedule.AddCouple(secondCourseCouple);
-            courseSchedule.AddCouple(thirdCourseCouple);
+            courseSchedule.AddAcademicClass(firstCourseAcademicClass);
+            courseSchedule.AddAcademicClass(secondCourseAcademicClass);
+            courseSchedule.AddAcademicClass(thirdCourseAcademicClass);
 
             course.AddFlow("1.1", courseSchedule, 20);
             
@@ -58,21 +58,21 @@ namespace IsuExtra.Tests
             var groupSchedule = new Schedule();
             var courseSchedule = new Schedule();
             
-            var firstCourseCouple = new Couple(CoupleNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
-            var secondCourseCouple = new Couple(CoupleNumber.Second, DayOfWeek.Tuesday, "Vinny", 1223);
-            var thirdCourseCouple = new Couple(CoupleNumber.Third, DayOfWeek.Friday, "Kashin", 1224);
+            var firstCourseAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
+            var secondCourseAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Tuesday, "Vinny", 1223);
+            var thirdCourseAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Friday, "Kashin", 1224);
 
-            var firstCouple = new Couple(CoupleNumber.First, DayOfWeek.Monday, "Molochny", 1222);
-            var secondCouple = new Couple(CoupleNumber.Second, DayOfWeek.Monday, "Shokoladny", 1223);
-            var thirdCouple = new Couple(CoupleNumber.Third, DayOfWeek.Monday, "Smirnov", 1224);
+            var firstAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Monday, "Molochny", 1222);
+            var secondAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Monday, "Shokoladny", 1223);
+            var thirdAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Monday, "Smirnov", 1224);
             
-            groupSchedule.AddCouple(firstCouple);
-            groupSchedule.AddCouple(secondCouple);
-            groupSchedule.AddCouple(thirdCouple);
+            groupSchedule.AddAcademicClass(firstAcademicClass);
+            groupSchedule.AddAcademicClass(secondAcademicClass);
+            groupSchedule.AddAcademicClass(thirdAcademicClass);
             
-            courseSchedule.AddCouple(firstCourseCouple);
-            courseSchedule.AddCouple(secondCourseCouple);
-            courseSchedule.AddCouple(thirdCourseCouple);
+            courseSchedule.AddAcademicClass(firstCourseAcademicClass);
+            courseSchedule.AddAcademicClass(secondCourseAcademicClass);
+            courseSchedule.AddAcademicClass(thirdCourseAcademicClass);
 
             course.AddFlow("1.1", courseSchedule, 20);
             
@@ -100,33 +100,33 @@ namespace IsuExtra.Tests
             var groupSchedule = new Schedule();
             var courseSchedule = new Schedule();
             
-            var firstCourseCouple = new Couple(CoupleNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
-            var secondCourseCouple = new Couple(CoupleNumber.Second, DayOfWeek.Tuesday, "Vinny", 1223);
-            var thirdCourseCouple = new Couple(CoupleNumber.Third, DayOfWeek.Friday, "Kashin", 1224);
+            var firstCourseAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
+            var secondCourseAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Tuesday, "Vinny", 1223);
+            var thirdCourseAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Friday, "Kashin", 1224);
 
-            var firstCouple = new Couple(CoupleNumber.First, DayOfWeek.Monday, "Molochny", 1222);
-            var secondCouple = new Couple(CoupleNumber.Second, DayOfWeek.Monday, "Shokoladny", 1223);
-            var thirdCouple = new Couple(CoupleNumber.Third, DayOfWeek.Monday, "Smirnov", 1224);
+            var firstAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Monday, "Molochny", 1222);
+            var secondAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Monday, "Shokoladny", 1223);
+            var thirdAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Monday, "Smirnov", 1224);
             
-            groupSchedule.AddCouple(firstCouple);
-            groupSchedule.AddCouple(secondCouple);
-            groupSchedule.AddCouple(thirdCouple);
+            groupSchedule.AddAcademicClass(firstAcademicClass);
+            groupSchedule.AddAcademicClass(secondAcademicClass);
+            groupSchedule.AddAcademicClass(thirdAcademicClass);
             
-            courseSchedule.AddCouple(firstCourseCouple);
-            courseSchedule.AddCouple(secondCourseCouple);
-            courseSchedule.AddCouple(thirdCourseCouple);
+            courseSchedule.AddAcademicClass(firstCourseAcademicClass);
+            courseSchedule.AddAcademicClass(secondCourseAcademicClass);
+            courseSchedule.AddAcademicClass(thirdCourseAcademicClass);
 
             course.AddFlow("1.1", courseSchedule, 20);
             
-            firstCourseCouple = new Couple(CoupleNumber.First, DayOfWeek.Thursday, "Torvalds", 1222);
-            secondCourseCouple = new Couple(CoupleNumber.Second, DayOfWeek.Tuesday, "Gates", 1223);
-            thirdCourseCouple = new Couple(CoupleNumber.Third, DayOfWeek.Friday, "Straustrup", 1224);
+            firstCourseAcademicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Thursday, "Torvalds", 1222);
+            secondCourseAcademicClass = new AcademicClass(AcademicClassNumber.Second, DayOfWeek.Tuesday, "Gates", 1223);
+            thirdCourseAcademicClass = new AcademicClass(AcademicClassNumber.Third, DayOfWeek.Friday, "Straustrup", 1224);
 
             courseSchedule = new Schedule();
             
-            courseSchedule.AddCouple(firstCourseCouple);
-            courseSchedule.AddCouple(secondCourseCouple);
-            courseSchedule.AddCouple(thirdCourseCouple);
+            courseSchedule.AddAcademicClass(firstCourseAcademicClass);
+            courseSchedule.AddAcademicClass(secondCourseAcademicClass);
+            courseSchedule.AddAcademicClass(thirdCourseAcademicClass);
             
             course2.AddFlow("1.1", courseSchedule, 20);
             
@@ -150,10 +150,10 @@ namespace IsuExtra.Tests
             var groupSchedule = new Schedule();
             var courseSchedule = new Schedule();
             
-            var couple = new Couple(CoupleNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
+            var academicClass = new AcademicClass(AcademicClassNumber.First, DayOfWeek.Thursday, "Pivovarov", 1222);
 
-            groupSchedule.AddCouple(couple);
-            courseSchedule.AddCouple(couple);
+            groupSchedule.AddAcademicClass(academicClass);
+            courseSchedule.AddAcademicClass(academicClass);
 
             course.AddFlow("1.1", courseSchedule, 20);
 
