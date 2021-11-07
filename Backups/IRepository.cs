@@ -4,6 +4,6 @@ namespace Backups
 {
     public interface IRepository
     {
-        public List<Storage> CreateStorages(BackupJob backupJob);
+        List<Storage> CreateStorages(BackupJob backupJob);
     }
 }
