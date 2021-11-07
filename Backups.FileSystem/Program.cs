@@ -12,11 +12,11 @@ namespace Backups.FileSystem
             
             const string fileName1 = "test1.txt";
             const string fileName2 = "test2.txt";
-            
-            const RepositoryType jobRepoType = RepositoryType.FileSystem;
-            const StorageType storageType = StorageType.SingleStorage;
 
-            var backupJob = new BackupJob(jobName, storageType, jobRepoType);
+            var fileSystemRepository = new FileSystemRepository();
+            var fileStrategy = new SingleFileStrategy();
+
+            var backupJob = new BackupJob(jobName, fileSystemRepository, fileStrategy);
             var jobObject1 = new JobObject(fileName1, jobsMainDir + "/" + fileName1);
             var jobObject2 = new JobObject(fileName2, jobsMainDir + "/" + fileName2);
 
