@@ -6,31 +6,21 @@ namespace Backups
 {
     public class BackupJob
     {
-        private static IRepository _repository;
+        private IRepository _repository;
         private int _currentRestorePointNumber = 1;
 
         private List<JobObject> _jobObjects = new List<JobObject>();
         private List<RestorePoint> _restorePoints = new List<RestorePoint>();
 
-        public BackupJob()
-        {
-            throw new BackupsException("You should provide job name and type of file storaging!");
-        }
-
-        public BackupJob(string jobName, StorageType storageType, RepositoryType repositoryType)
+        public BackupJob(string jobName, IRepository repository, IStorageStrategy strategy)
         {
             JobName = jobName;
-            StorageType = storageType;
-            _repository = repositoryType switch
-            {
-                RepositoryType.Virtual => new VirtualRepository(),
-                RepositoryType.FileSystem => new FileSystemRepository(),
-                _ => throw new BackupsException("Incorrect repository type!")
-            };
+            _repository = repository;
+            StorageStrategy = strategy;
         }
 
         public string JobName { get; }
-        public StorageType StorageType { get; }
+        public IStorageStrategy StorageStrategy { get; }
 
         public void AddJobObject(JobObject jobObject)
         {
@@ -38,6 +28,8 @@ namespace Backups
             {
                 throw new BackupsException("This job object is already exists!");
             }
+
+            jobObject.JobName = JobName;
 
             _jobObjects.Add(jobObject);
         }
