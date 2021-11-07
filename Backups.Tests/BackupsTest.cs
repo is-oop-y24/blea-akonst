@@ -8,7 +8,7 @@ namespace Backups.Tests
     {
         public string JobName = "TestJob";
         public RepositoryType JobRepoType = RepositoryType.Virtual;
-        public SplitVirtualStrategy Strategy = new SplitVirtualStrategy();
+        public SplitStrategy Strategy = new SplitStrategy();
         
         [Test]
         public void CreateTwoRestorePointsWithDiffJobObjCount_StoragesCountsAreDiff()

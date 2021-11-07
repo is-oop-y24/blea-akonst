@@ -2,9 +2,9 @@ using System;
 
 namespace Backups
 {
-    public class SplitFileStrategy : IStorageStrategy
+    public class SingleStrategy : IStorageStrategy
     {
-        public Tuple<string, string> MakeStorageFile(JobObject obj, int restorePointNumber)
+        public Tuple<string, string> MakeStorageFile(JobObject obj, RepositoryType type, int restorePointNumber)
         {
             string storageName = obj.FileName
                                  + "_"
@@ -13,8 +13,12 @@ namespace Backups
                                + "/" + "RestorePoint_"
                                + restorePointNumber;
 
-            storagePath += "/" + storageName + ".zip";
-            FileHandler.ArchivateFile(obj, storagePath);
+            storagePath += ".zip";
+
+            if (type.Equals(RepositoryType.FileSystem))
+            {
+                FileHandler.ArchivateFile(obj, storagePath);
+            }
 
             return new Tuple<string, string>(storageName, storagePath);
         }

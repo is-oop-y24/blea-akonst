@@ -4,6 +4,6 @@ namespace Backups
 {
     public interface IStorageStrategy
     {
-        Tuple<string, string> MakeStorageFile(JobObject obj, int restorePointNumber);
+        Tuple<string, string> MakeStorageFile(JobObject obj, RepositoryType type, int restorePointNumber);
     }
 }

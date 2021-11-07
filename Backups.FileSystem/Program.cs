@@ -14,7 +14,7 @@ namespace Backups.FileSystem
             const string fileName2 = "test2.txt";
 
             var fileSystemRepository = new FileSystemRepository();
-            var fileStrategy = new SingleFileStrategy();
+            var fileStrategy = new SingleStrategy();
 
             var backupJob = new BackupJob(jobName, fileSystemRepository, fileStrategy);
             var jobObject1 = new JobObject(fileName1, jobsMainDir + "/" + fileName1);
