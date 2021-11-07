@@ -1,12 +1,13 @@
+using System.IO;
 using System.IO.Compression;
 
 namespace Backups
 {
-    public class FileHandler
+    public static class FileHandler
     {
-        public void ArchivateFile(bool isArchiveCreated, JobObject obj, string storagePath)
+        public static void ArchivateFile(JobObject obj, string storagePath)
         {
-            ZipArchive zipArchive = ZipFile.Open(storagePath, isArchiveCreated ? ZipArchiveMode.Update : ZipArchiveMode.Create);
+            ZipArchive zipArchive = ZipFile.Open(storagePath, File.Exists(storagePath) ? ZipArchiveMode.Update : ZipArchiveMode.Create);
 
             zipArchive.CreateEntryFromFile(obj.FilePath, obj.FileName);
         }
