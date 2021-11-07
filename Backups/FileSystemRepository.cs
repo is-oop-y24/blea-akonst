@@ -19,6 +19,7 @@ namespace Backups
                 (string storageName, string storagePath)
                     = backupJob.StorageStrategy.MakeStorageFile(obj, Repository, restorePointNumber);
 
+                FileHandler.ArchivateFile(obj, storagePath);
                 storageList.Add(new Storage(storageName, storagePath));
             }
 

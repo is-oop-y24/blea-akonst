@@ -15,11 +15,6 @@ namespace Backups
 
             storagePath += ".zip";
 
-            if (type.Equals(RepositoryType.FileSystem))
-            {
-                FileHandler.ArchivateFile(obj, storagePath);
-            }
-
             return new Tuple<string, string>(storageName, storagePath);
         }
     }
