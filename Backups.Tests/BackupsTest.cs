@@ -8,12 +8,13 @@ namespace Backups.Tests
     {
         public string JobName = "TestJob";
         public RepositoryType JobRepoType = RepositoryType.Virtual;
-        public StorageType StorageType = StorageType.SplitStorage;
+        public SplitVirtualStrategy Strategy = new SplitVirtualStrategy();
         
         [Test]
         public void CreateTwoRestorePointsWithDiffJobObjCount_StoragesCountsAreDiff()
         {
-            var backupJob = new BackupJob(JobName, StorageType, JobRepoType);
+            var virtualRepository = new VirtualRepository();
+            var backupJob = new BackupJob(JobName, virtualRepository, Strategy);
             var jobObjectA = new JobObject("File_A", "Sample path");
             var jobObjectB = new JobObject("File_B", "Sample path");
             
