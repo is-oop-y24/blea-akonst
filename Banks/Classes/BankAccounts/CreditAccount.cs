@@ -1,34 +1,22 @@
 using System;
+using Banks.Classes.BankAccounts.Enums;
 using Banks.Classes.BankClients;
-using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Classes.BankAccounts
 {
-    public class CreditAccount : IBankAccount
+    public class CreditAccount : BankAccount
     {
-        public CreditAccount(int id, double creditLimit, string bankName)
+        public CreditAccount(double creditLimit, string bankName, BankClient owner)
         {
-            Id = id;
             CreditLimit = creditLimit;
             BankName = bankName;
+            Owner = owner;
         }
 
-        public int Id { get; set; }
-        public string BankName { get; }
-        public double Balance { get; private set; } = 0;
-        public BankClient Owner { get; set; }
         public double CreditLimit { get; }
-        public int CurrentDate { get; set; }
 
-        public double Refill(double sum)
-        {
-            Balance += sum;
-
-            return Balance;
-        }
-
-        public double Withdraw(double sum)
+        public override double Withdraw(double sum)
         {
             if (Balance < 0 && Math.Abs(Balance - sum) > CreditLimit)
             {
@@ -40,13 +28,6 @@ namespace Banks.Classes.BankAccounts
                 throw new BanksException("Please, fill your address and passport data!");
             }
 
-            Balance -= sum;
-
-            return Balance;
-        }
-
-        public double ImmediatelyWithdraw(double sum)
-        {
             Balance -= sum;
 
             return Balance;

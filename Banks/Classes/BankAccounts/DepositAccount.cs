@@ -1,33 +1,21 @@
+using Banks.Classes.BankAccounts.Enums;
 using Banks.Classes.BankClients;
-using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Classes.BankAccounts
 {
-    public class DepositAccount : IBankAccount
+    public class DepositAccount : BankAccount
     {
-        public DepositAccount(int id, int depositExpiryDate, string bankName)
+        public DepositAccount(int depositExpiryDate, string bankName, BankClient owner)
         {
-            Id = id;
             DepositExpiryDate = depositExpiryDate;
             BankName = bankName;
+            Owner = owner;
         }
 
-        public int Id { get; set; }
-        public string BankName { get; }
-        public double Balance { get; private set; } = 0;
-        public BankClient Owner { get; set; }
-        public int CurrentDate { get; set; }
         public int DepositExpiryDate { get; }
 
-        public double Refill(double sum)
-        {
-            Balance += sum;
-
-            return Balance;
-        }
-
-        public double Withdraw(double sum)
+        public override double Withdraw(double sum)
         {
             if (CurrentDate < DepositExpiryDate)
             {
@@ -44,13 +32,6 @@ namespace Banks.Classes.BankAccounts
                 throw new BanksException("Please, fill your address and passport data!");
             }
 
-            Balance -= sum;
-
-            return Balance;
-        }
-
-        public double ImmediatelyWithdraw(double sum)
-        {
             Balance -= sum;
 
             return Balance;

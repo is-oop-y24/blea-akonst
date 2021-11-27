@@ -4,7 +4,6 @@ using System.Linq;
 using Banks.Classes.BankAccounts;
 using Banks.Classes.BankAccounts.Enums;
 using Banks.Classes.BankClients;
-using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Classes
@@ -13,10 +12,7 @@ namespace Banks.Classes
     {
         private int _currentDate;
         private List<BankClient> _clients = new List<BankClient>();
-
-        private List<DebitAccount> _debitAccounts = new List<DebitAccount>();
-        private List<CreditAccount> _creditAccounts = new List<CreditAccount>();
-        private List<DepositAccount> _depositAccounts = new List<DepositAccount>();
+        private List<BankAccount> _accounts = new List<BankAccount>();
 
         public int CurrentDate
         {
@@ -25,27 +21,24 @@ namespace Banks.Classes
             {
                 _currentDate = value;
 
-                foreach (DebitAccount acc in _debitAccounts)
+                foreach (BankAccount acc in _accounts)
                 {
                     int prevDate = acc.CurrentDate;
                     int monthsToCharge = ((prevDate % 30) + _currentDate - prevDate) / 30;
-                    ChargePercentToAccounts(AccountType.Debit, monthsToCharge);
-                    acc.CurrentDate = _currentDate;
-                }
 
-                foreach (CreditAccount acc in _creditAccounts)
-                {
-                    int prevDate = acc.CurrentDate;
-                    int monthsToCharge = ((prevDate % 30) + _currentDate - prevDate) / 30;
-                    ChargeCreditCommissions(monthsToCharge);
-                    acc.CurrentDate = _currentDate;
-                }
+                    if (acc.GetType() == typeof(DepositAccount))
+                    {
+                        ChargeDepositPercent((DepositAccount)acc, monthsToCharge);
+                    }
+                    else if (acc.GetType() == typeof(CreditAccount))
+                    {
+                        ChargeCreditCommissions((CreditAccount)acc, monthsToCharge);
+                    }
+                    else if (acc.GetType() == typeof(DebitAccount))
+                    {
+                        ChargeDebitPercent((DebitAccount)acc, monthsToCharge);
+                    }
 
-                foreach (DepositAccount acc in _depositAccounts)
-                {
-                    int prevDate = acc.CurrentDate;
-                    int monthsToCharge = ((prevDate % 30) + _currentDate - prevDate) / 30;
-                    ChargePercentToAccounts(AccountType.Debit, monthsToCharge);
                     acc.CurrentDate = _currentDate;
                 }
             }
@@ -59,6 +52,7 @@ namespace Banks.Classes
         public double CreditCommission { get; set; }
         public double CreditLimit { get; set; }
         public double UntrustedClientTransactionLimit { get; set; }
+        public int StandardDepositTerm { get; set; }
 
         public BankClient AddClient(BankClient client)
         {
@@ -67,97 +61,33 @@ namespace Banks.Classes
             return _clients.First(cl => cl.Equals(client));
         }
 
-        public DebitAccount AddDebitAccount(BankClient client)
+        public void AddAccount(BankAccount account)
         {
-            int id = _debitAccounts.Count;
-            DebitAccount debit = DebitAccountCreator.MakeAccount(id, BankName);
-            debit.Owner = client;
-            _debitAccounts.Add(debit);
-
-            return _debitAccounts.First(d => d.Equals(debit));
+            int id = _accounts.Count;
+            account.Id = id;
+            _accounts.Add(account);
         }
 
-        public CreditAccount AddCreditAccount(BankClient client)
-        {
-            int id = _creditAccounts.Count;
-            CreditAccount credit = CreditAccountCreator.MakeAccount(id, CreditLimit, BankName);
-            credit.Owner = client;
-            _creditAccounts.Add(credit);
-
-            return _creditAccounts.First(c => c.Equals(credit));
-        }
-
-        public DepositAccount AddDepositAccount(BankClient client, int term)
-        {
-            int id = _depositAccounts.Count;
-            DepositAccount deposit = DepositAccountCreator.MakeAccount(id, term, BankName);
-            deposit.Owner = client;
-            _depositAccounts.Add(deposit);
-
-            return _depositAccounts.First(d => d.Equals(deposit));
-        }
-
-        public double Refill(IBankAccount account, double sum)
+        public double Refill(BankAccount account, double sum)
         {
             return account.Refill(sum);
         }
 
-        public double Withdraw(IBankAccount account, double sum)
+        public double Withdraw(BankAccount account, double sum)
         {
             return account.Withdraw(sum);
         }
 
-        public void ChargePercentToAccounts(AccountType type, int monthsCount)
+        public void ChargeCreditCommissions(CreditAccount account, int months)
         {
-            switch (type)
-            {
-                case AccountType.Debit:
-                    foreach (DebitAccount account in _debitAccounts)
-                    {
-                        ChargeDebitPercent(account, monthsCount);
-                    }
-
-                    break;
-                case AccountType.Deposit:
-                    foreach (DepositAccount account in _depositAccounts)
-                    {
-                        if (account.DepositExpiryDate < _currentDate)
-                        {
-                            continue;
-                        }
-
-                        ChargeDepositPercent(account, monthsCount);
-                    }
-
-                    break;
-                default:
-                    throw new BanksException("Incorrect account type!");
-            }
+            account.ImmediatelyWithdraw(CreditCommission * months);
         }
 
-        public void ChargeCreditCommissions(int months)
+        public BankAccount GetAccount(int id)
         {
-            foreach (CreditAccount account in _creditAccounts)
-            {
-                account.ImmediatelyWithdraw(CreditCommission * months);
-            }
-        }
+            BankAccount account = _accounts.FirstOrDefault(acc => acc.Id.Equals(id));
 
-        public IBankAccount GetAccount(int id)
-        {
-            IBankAccount account = _debitAccounts.FirstOrDefault(acc => acc.Id.Equals(id));
-
-            if (account == default(DebitAccount))
-            {
-                account = _creditAccounts.FirstOrDefault(acc => acc.Id.Equals(id));
-            }
-
-            if (account == default(CreditAccount))
-            {
-                account = _depositAccounts.FirstOrDefault(acc => acc.Id.Equals(id));
-            }
-
-            if (account == default(DepositAccount))
+            if (account == default(BankAccount))
             {
                 throw new BanksException("This account doesn't exists!");
             }
@@ -195,6 +125,12 @@ namespace Banks.Classes
         private void ChargeDepositPercent(DepositAccount account, int months)
         {
             double percent;
+
+            if (account.DepositExpiryDate < _currentDate)
+            {
+                return;
+            }
+
             if (account.Balance < DepositPercentIncreasingBorderSum)
             {
                 percent = FirstDepositPercent;

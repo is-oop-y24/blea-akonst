@@ -52,6 +52,12 @@ namespace Banks.Classes
             return this;
         }
 
+        public BankBuilder SetStandardDepositTerm(int term)
+        {
+            _bank.StandardDepositTerm = term;
+            return this;
+        }
+
         public Bank GetBank()
         {
             Bank res = _bank;

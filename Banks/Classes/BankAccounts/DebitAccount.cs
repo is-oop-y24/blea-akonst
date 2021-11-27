@@ -1,31 +1,17 @@
 using Banks.Classes.BankClients;
-using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Classes.BankAccounts
 {
-    public class DebitAccount : IBankAccount
+    public class DebitAccount : BankAccount
     {
-        public DebitAccount(int id, string bankName)
+        public DebitAccount(string bankName, BankClient owner)
         {
-            Id = id;
             BankName = bankName;
+            Owner = owner;
         }
 
-        public int Id { get; set; }
-        public string BankName { get; private set; }
-        public double Balance { get; private set; } = 0;
-        public BankClient Owner { get; set; }
-        public int CurrentDate { get; set; }
-
-        public double Refill(double sum)
-        {
-            Balance += sum;
-
-            return Balance;
-        }
-
-        public double Withdraw(double sum)
+        public override double Withdraw(double sum)
         {
             if (Balance - sum < 0)
             {
@@ -37,13 +23,6 @@ namespace Banks.Classes.BankAccounts
                 throw new BanksException("Please, fill your address and passport data!");
             }
 
-            Balance -= sum;
-
-            return Balance;
-        }
-
-        public double ImmediatelyWithdraw(double sum)
-        {
             Balance -= sum;
 
             return Balance;

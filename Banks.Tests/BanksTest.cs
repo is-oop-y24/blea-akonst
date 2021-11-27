@@ -13,7 +13,7 @@ namespace Banks.Tests
 
         private Bank _bankOne;
         private Bank _bankTwo;
-
+        
         private DebitAccount _accountBankOneDebit;
         private CreditAccount _accountBankTwo;
 
@@ -60,9 +60,10 @@ namespace Banks.Tests
                 .GetClient();
 
             client = _bankOne.AddClient(client);
-            
-            _accountBankOneDebit = _bankOne.AddDebitAccount(client);
 
+            _accountBankOneDebit = DebitAccountFactory.MakeAccount(_bankOne.BankName, client);
+            _bankOne.AddAccount(_accountBankOneDebit);
+            
             client = clientBuilder.SetName("Il-nam")
                 .SetSurname("Oh")
                 .SetAddress("Republic of Korea, Seoul city, Seoul Sky building")
@@ -71,7 +72,7 @@ namespace Banks.Tests
 
             client = _bankTwo.AddClient(client);
 
-            _accountBankTwo = _bankTwo.AddCreditAccount(client);
+            _accountBankTwo = CreditAccountFactory.MakeAccount(_bankTwo.CreditLimit, _bankTwo.BankName, client);
         }
 
         [Test]

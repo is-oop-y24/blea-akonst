@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Banks.Classes.BankAccounts;
 using Banks.Classes.BankClients;
 using Banks.Classes.BankTransactions;
-using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Classes
@@ -41,7 +41,7 @@ namespace Banks.Classes
             return bank;
         }
 
-        public void MoneyTransfer(IBankAccount sendersAccount, IBankAccount receiversAccount, double sum)
+        public void MoneyTransfer(BankAccount sendersAccount, BankAccount receiversAccount, double sum)
         {
             Bank sendersBank = _banks.FirstOrDefault(bank => bank.BankName.Equals(sendersAccount.BankName));
 
@@ -80,11 +80,13 @@ namespace Banks.Classes
             Bank sendersBank = _banks.FirstOrDefault(b => b.BankName.Equals(transaction.SendersBank));
             Bank receiversBank = _banks.FirstOrDefault(b => b.BankName.Equals(transaction.ReceiversBank));
 
-            IBankAccount sendersAccount = sendersBank.GetAccount(transaction.SenderId);
-            IBankAccount receiversAccount = receiversBank.GetAccount(transaction.ReceiverId);
+            BankAccount sendersAccount = sendersBank.GetAccount(transaction.SenderId);
+            BankAccount receiversAccount = receiversBank.GetAccount(transaction.ReceiverId);
 
             sendersAccount.Refill(transaction.Sum);
             receiversAccount.ImmediatelyWithdraw(transaction.Sum);
+
+            _transactions.Remove(transaction);
         }
 
         private void NotifyBanksAboutCurrentDate()
@@ -95,14 +97,22 @@ namespace Banks.Classes
             }
         }
 
-        private void NotifyClientsAboutAction()
+        private void BankUpdatesSubscribe(BankClient client)
+        {
+            _subscribers.Add(client);
+        }
+
+        private void NotifyClientsAboutAction(string info)
         {
             foreach (BankClient client in _subscribers)
             {
-                Notify(client);
+                Notify(client, info);
             }
         }
 
-        private void Notify(BankClient client) { }
+        private void Notify(BankClient client, string info)
+        {
+            client.UpdateInfo(info);
+        }
     }
 }
