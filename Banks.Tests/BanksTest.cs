@@ -35,7 +35,6 @@ namespace Banks.Tests
                 .SetSecondDepositPercent(DepositPercentSecond)
                 .SetDepositPercentIncreasingBorderSum(50000)
                 .SetUntrustedClientTransactionLimit(15000)
-                .SetOperationMediator(new BankOperationMediator())
                 .GetBank();
             _centralBank.AddBank(_bankOne);
                 
@@ -47,7 +46,6 @@ namespace Banks.Tests
                 .SetSecondDepositPercent(DepositPercentSecond)
                 .SetDepositPercentIncreasingBorderSum(100000)
                 .SetUntrustedClientTransactionLimit(10000)
-                .SetOperationMediator(new BankOperationMediator())
                 .GetBank();
             _centralBank.AddBank(_bankTwo);
             
@@ -63,7 +61,7 @@ namespace Banks.Tests
 
             client = _bankOne.AddClient(client);
 
-            _accountBankOneDebit = DebitAccountFactory.MakeAccount(_bankOne.BankName, client);
+            _accountBankOneDebit = DebitAccountFactory.MakeAccount(_bankOne, client);
             _bankOne.AddAccount(_accountBankOneDebit);
             
             client = clientBuilder.SetName("Il-nam")
@@ -74,7 +72,7 @@ namespace Banks.Tests
 
             client = _bankTwo.AddClient(client);
 
-            _accountBankTwo = CreditAccountFactory.MakeAccount(_bankTwo.CreditLimit, _bankTwo.BankName, client);
+            _accountBankTwo = CreditAccountFactory.MakeAccount(_bankTwo, client);
         }
 
         [Test]

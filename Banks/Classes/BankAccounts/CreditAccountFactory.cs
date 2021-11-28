@@ -4,9 +4,17 @@ namespace Banks.Classes.BankAccounts
 {
     public class CreditAccountFactory
     {
-        public static CreditAccount MakeAccount(double creditLimit, string bankName, BankClient owner)
+        public static CreditAccount MakeAccount(Bank bank, BankClient owner)
         {
-            return new CreditAccount(creditLimit, bankName, owner);
+            var account = new CreditAccount
+            {
+                BankName = bank.BankName,
+                CreditComission = bank.CreditCommission,
+                CreditLimit = bank.CreditLimit,
+                Owner = owner,
+            };
+
+            return account;
         }
     }
 }

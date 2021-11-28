@@ -1,19 +1,17 @@
 using System;
-using Banks.Classes.BankClients;
 using Banks.Tools;
 
 namespace Banks.Classes.BankAccounts
 {
     public class CreditAccount : BankAccount
     {
-        public CreditAccount(double creditLimit, string bankName, BankClient owner)
-        {
-            CreditLimit = creditLimit;
-            BankName = bankName;
-            Owner = owner;
-        }
+        public double CreditLimit { get; set; }
+        public double CreditComission { get; set; }
 
-        public double CreditLimit { get; }
+        public override void ChargePercentsAndCommissions(int monthsToCharge)
+        {
+            ImmediatelyWithdraw(CreditComission * monthsToCharge);
+        }
 
         public override double Withdraw(double sum)
         {

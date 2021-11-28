@@ -1,14 +1,17 @@
-using Banks.Classes.BankClients;
 using Banks.Tools;
 
 namespace Banks.Classes.BankAccounts
 {
     public class DebitAccount : BankAccount
     {
-        public DebitAccount(string bankName, BankClient owner)
+        public double DebitPercent { get; set; }
+        public override void ChargePercentsAndCommissions(int monthsToCharge)
         {
-            BankName = bankName;
-            Owner = owner;
+            double monthlyPart = (DebitPercent / 12) / 100;
+            double chargingPercent = monthsToCharge * monthlyPart;
+
+            double chargingSum = Balance * chargingPercent;
+            Refill(chargingSum);
         }
 
         public override double Withdraw(double sum)

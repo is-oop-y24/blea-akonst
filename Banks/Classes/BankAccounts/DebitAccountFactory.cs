@@ -4,9 +4,16 @@ namespace Banks.Classes.BankAccounts
 {
     public class DebitAccountFactory
     {
-        public static DebitAccount MakeAccount(string bankName, BankClient owner)
+        public static DebitAccount MakeAccount(Bank bank, BankClient owner)
         {
-            return new DebitAccount(bankName, owner);
+            var account = new DebitAccount
+            {
+                BankName = bank.BankName,
+                Owner = owner,
+                DebitPercent = bank.DebitPercent,
+            };
+
+            return account;
         }
     }
 }
