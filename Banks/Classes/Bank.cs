@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Banks.Classes.BankAccounts;
-using Banks.Classes.BankAccounts.Enums;
 using Banks.Classes.BankClients;
+using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Classes
 {
     public class Bank
     {
+        private IMediator _mediator;
         private int _currentDate;
         private List<BankClient> _clients = new List<BankClient>();
         private List<BankAccount> _accounts = new List<BankAccount>();
@@ -25,20 +26,7 @@ namespace Banks.Classes
                 {
                     int prevDate = acc.CurrentDate;
                     int monthsToCharge = ((prevDate % 30) + _currentDate - prevDate) / 30;
-
-                    if (acc.GetType() == typeof(DepositAccount))
-                    {
-                        ChargeDepositPercent((DepositAccount)acc, monthsToCharge);
-                    }
-                    else if (acc.GetType() == typeof(CreditAccount))
-                    {
-                        ChargeCreditCommissions((CreditAccount)acc, monthsToCharge);
-                    }
-                    else if (acc.GetType() == typeof(DebitAccount))
-                    {
-                        ChargeDebitPercent((DebitAccount)acc, monthsToCharge);
-                    }
-
+                    _mediator.ChargingBankOperation(this, acc, monthsToCharge);
                     acc.CurrentDate = _currentDate;
                 }
             }
@@ -108,12 +96,7 @@ namespace Banks.Classes
             return BankName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(BankName) : 0;
         }
 
-        private bool Equals(Bank other)
-        {
-            return string.Equals(BankName, other.BankName, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private void ChargeDebitPercent(DebitAccount account, int months)
+        public void ChargeDebitPercent(DebitAccount account, int months)
         {
             double monthlyPart = (DebitPercent / 12) / 100;
             double chargingPercent = months * monthlyPart;
@@ -122,7 +105,7 @@ namespace Banks.Classes
             account.Refill(chargingSum);
         }
 
-        private void ChargeDepositPercent(DepositAccount account, int months)
+        public void ChargeDepositPercent(DepositAccount account, int months)
         {
             double percent;
 
@@ -145,6 +128,16 @@ namespace Banks.Classes
 
             double chargingSum = account.Balance * chargingPercent;
             account.Refill(chargingSum);
+        }
+
+        public void SetOperationMediator(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        private bool Equals(Bank other)
+        {
+            return string.Equals(BankName, other.BankName, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

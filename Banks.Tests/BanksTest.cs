@@ -35,6 +35,7 @@ namespace Banks.Tests
                 .SetSecondDepositPercent(DepositPercentSecond)
                 .SetDepositPercentIncreasingBorderSum(50000)
                 .SetUntrustedClientTransactionLimit(15000)
+                .SetOperationMediator(new BankOperationMediator())
                 .GetBank();
             _centralBank.AddBank(_bankOne);
                 
@@ -46,6 +47,7 @@ namespace Banks.Tests
                 .SetSecondDepositPercent(DepositPercentSecond)
                 .SetDepositPercentIncreasingBorderSum(100000)
                 .SetUntrustedClientTransactionLimit(10000)
+                .SetOperationMediator(new BankOperationMediator())
                 .GetBank();
             _centralBank.AddBank(_bankTwo);
             

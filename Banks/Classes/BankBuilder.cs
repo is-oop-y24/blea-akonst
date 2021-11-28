@@ -1,3 +1,6 @@
+using System.Reflection.Metadata.Ecma335;
+using Banks.Interfaces;
+
 namespace Banks.Classes
 {
     public class BankBuilder
@@ -55,6 +58,12 @@ namespace Banks.Classes
         public BankBuilder SetStandardDepositTerm(int term)
         {
             _bank.StandardDepositTerm = term;
+            return this;
+        }
+
+        public BankBuilder SetOperationMediator(IMediator mediator)
+        {
+            _bank.SetOperationMediator(mediator);
             return this;
         }
 
