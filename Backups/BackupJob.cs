@@ -6,11 +6,11 @@ namespace Backups
 {
     public class BackupJob
     {
+        private List<RestorePoint> _restorePoints = new List<RestorePoint>();
         private IRepository _repository;
         private int _currentRestorePointNumber = 1;
 
         private List<JobObject> _jobObjects = new List<JobObject>();
-        private List<RestorePoint> _restorePoints = new List<RestorePoint>();
 
         public BackupJob(string jobName, IRepository repository, IStorageStrategy strategy)
         {
@@ -44,7 +44,7 @@ namespace Backups
             _jobObjects.Remove(jobObject);
         }
 
-        public void NewRestorePoint()
+        public virtual void NewRestorePoint()
         {
             List<Storage> storages = _repository.CreateStorages(this);
 
@@ -65,6 +65,11 @@ namespace Backups
         public int CurrentRestorePointNumber()
         {
             return _currentRestorePointNumber;
+        }
+
+        protected void UpdateRestorePoints(List<RestorePoint> points)
+        {
+            _restorePoints = points;
         }
     }
 }
