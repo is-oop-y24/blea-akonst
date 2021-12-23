@@ -52,19 +52,19 @@ namespace BackupsExtra.Classes
             return new RestorePoint(newPoint.PointNumber, newStorages);
         }
 
-        public void Restore(RestorePoint restorePoint, string restorePath)
+        public void Restore(RestorePoint restorePoint, string restorePath, IRestoreAlgorithm algorithm)
         {
             var storages = restorePoint.GetStorages().ToList();
 
             if (storages.TrueForAll(s => s.StoragePath == storages[0].StoragePath))
             {
-                RestoreAlgorithm.RestoreFiles(storages[0].StoragePath, restorePath);
+                algorithm.RestoreFiles(storages[0].StoragePath, restorePath);
                 return;
             }
 
             foreach (Storage st in storages)
             {
-                RestoreAlgorithm.RestoreFiles(st.StoragePath, restorePath);
+                algorithm.RestoreFiles(st.StoragePath, restorePath);
             }
         }
     }

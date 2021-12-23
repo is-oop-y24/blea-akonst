@@ -1,10 +1,11 @@
 using System.IO.Compression;
+using BackupsExtra.Interfaces;
 
 namespace BackupsExtra.Classes
 {
-    public static class RestoreAlgorithm
+    public class RestoreAlgorithm : IRestoreAlgorithm
     {
-        public static void RestoreFiles(string storagePath, string restorePath)
+        public void RestoreFiles(string storagePath, string restorePath)
         {
             ZipFile.ExtractToDirectory(storagePath, restorePath);
         }
